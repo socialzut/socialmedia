@@ -10,32 +10,53 @@ from .models import (
     )
 @view_config(route_name='tasks_view', renderer='templates/tasks.mak')
 def tasks_view(request):
+    
     author_name = "Lukasz Sochanski"
     tasks = []
     main_task_elements = []
-    main_task_elements.append('Widok z templatki.')
-    main_task_elements.append('Przekazanie do templatki słownika.')
-    main_task_elements.append('Słownik zawiera listę, której każdy element jest słownikiem')
-    main_task_elements.append('Każdy element posiada klucz - literę i wartość klucza')
-    main_task_elements.append('Każdy z kluczy to jedna z liter akronimu SOLID')
-    main_task_elements.append('Wartość klucza to string, w którym opiszesz, jak rozumiesz pojęcie kryjące się pod daną literą')
-    main_task_elements.append('Np: S - Single Reponsibility Priciple rozumiem jako...')
-    main_task_elements.append('Wszystko oczywiście wyświetlone za pomocą templatki')
+    main_task_elements.append('Stworzenie widoku(view) gdzie będzie formularz umożliwiający\
+        podanie pliku pdf z listą studentów.')
+    main_task_elements.append('Wykorzystanie jednego z dostępnych w internecie modułów\
+     pythonowych, który umożliwia wydobycie tekstu z pdfa.')
+    main_task_elements.append("Stworzenie modułu, którego jedna z metod będzie miała\
+        na wyjściu listę studentów - listę, czyli pythonową strukturę danych - '[]'")
+    main_task_elements.append('Stworzenie modułu, który filtruje tą listę i na wyjściu ma listę kobiet.')
+    main_task_elements.append('Stworznie modułu, a raczej fragmentu kodu,\
+     który będzie przyjmował listę i zapisywał ją do bazy danych.')
+    main_task_elements.append('Stworznie widoku, który wyświetli tą listę w formie tabeli')
 
 
     task_for_all_team_members = {
-        'contents': """Zadanie dla wszystkich polega na stworzeniu widoku\
-            (view) tak, żeby po włączeniu serwera była dostępna strona \
-            '0.0.0.0:port/twoje_imie/' a treść będzie generowana dzięki:""",
+        'contents': """Zadanie dla wszystkich polega na stworzeniu parsera\
+        o znanej nam tematyce. Całość zadania to:""",
         'elements': main_task_elements,
-        'summary': """Treść do widoku przekazałem za pomocą słownika, \
+        'summary': """Wykorzytajcie do zadania wiedzę z zadania 2. Treść do widoku przekazałem za pomocą słownika, \
             żebyście mogli zobaczyć, jak działa pyramid i templatki mako.\
+            Zapoznajcie się z formatem json.
             Dokumentacja pyramid: http://docs.pylonsproject.org/projects/pyramid/en/latest/
             Dokumentacja mako: http://docs.makotemplates.org/en/latest/
             Dokumentacja python: https://docs.python.org/2/"""
     }
     tasks.append(task_for_all_team_members)
-    return { 'tasks': tasks, 'letters': ['a','b','c'], 'default_filters':'decode.utf8'}
+    knowledge_task = {
+        'contents': """ By poznać zasady i dobre praktyki programowania, \
+            zapoznajcie się z materiałami: """,
+        'elements': [
+            "http://legacy.python.org/dev/peps/pep-0008/ - zasady pisania kodu w pythonie",
+            "https://speakerdeck.com/guasek/test-driven-development-the-right-way  - TDD autorstwa kolegi z red-sky",
+            "https://docs.python.org/2/library/unittest.html#organizing-test-code   - z dokumentacji unittesty",
+            "!!! https://www.youtube.com/watch?v=WpkDN78P884&index=5&list=PLLbmAYY8SeFXCQ0Lrc6lzfNu_Ix6Q_H5b - architektura warstwowa",
+            "http://williamdurand.fr/2013/07/30/from-stupid-to-solid-code/",
+            "!!! http://blog.8thlight.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+            "PL !!! https://www.youtube.com/watch?v=znRByMgnFSM- testy",
+
+        ],
+        'summary': "Zwróćcie uwagi na wykrzykniki, przejrzyjcie arch. \
+            warstwową nawet kilka razy. Na początek to powinno wystarczyć."
+
+    }
+    tasks.append(knowledge_task)
+    return { 'tasks': tasks }
 
 @view_config(route_name='home', renderer='templates/mytemplate.pt')
 def my_view(request):

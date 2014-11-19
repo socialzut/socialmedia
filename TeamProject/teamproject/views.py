@@ -8,6 +8,19 @@ from .models import (
     DBSession,
     MyModel,
     )
+
+@view_config(route_name='tasks_view3', renderer='templates/test.mak')
+def testowa(request):
+    imie = 'Maciek'
+    nazwisko = "Admiak"
+    return {'moje_imie': imie, 'moje_nazwisko': nazwisko}
+
+
+@view_config(route_name='tasks_view2')
+def sratatata(request):
+    return Response('sratata')
+
+
 @view_config(route_name='tasks_view', renderer='templates/tasks.mak')
 def tasks_view(request):
     

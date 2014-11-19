@@ -12,6 +12,8 @@ from .models import (
 @view_config(route_name='tasks_view3', renderer='templates/test.mak')
 def testowa(request):
     imie = 'Maciek'
+    adres = 'Załom'
+    sex = 'tak'
     nazwisko = "Admiak"
     return {'moje_imie': imie, 'moje_nazwisko': nazwisko}
 

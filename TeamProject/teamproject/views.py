@@ -2,6 +2,16 @@
 from PyPDF2.pdf import PdfFileReader
 from StringIO import StringIO
 
+import sys
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdfparser import PDFParser
+from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
+from pdfminer.pdfdevice import PDFDevice, TagExtractor
+from pdfminer.pdfpage import PDFPage
+from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
+from pdfminer.cmapdb import CMapDB
+from pdfminer.layout import LAParams
+from pdfminer.image import ImageWriter
 
 import os
 import shutil
@@ -14,20 +24,50 @@ from .models import (
     )
 
 def getDataUsingPyPdf2(file):
-    pdf = PdfFileReader(file)
-    content = ""
-
-    for i in range(0, pdf.getNumPages()):
-        print str(i)
-        extractedText = pdf.getPage(i).extractText()
-        content +=  extractedText + "\n"
-
-    content = " ".join(content.replace("\xa0", " ").strip().split())
-    return content.encode("ascii", "ignore")
+    # debug option
+    debug = 0
+    # input option
+    password = ''
+    pagenos = set()
+    maxpages = 0
+    # output option
+    outfile = None
+    outtype = None
+    imagewriter = None
+    rotation = 0
+    layoutmode = 'normal'
+    codec = 'utf-8'
+    pageno = 1
+    scale = 1
+    caching = True
+    showpageno = True
+    laparams = LAParams()
+    rsrcmgr = PDFResourceManager(caching=caching)
+    outfp = StringIO()
+    device = TextConverter(rsrcmgr, outfp, codec=codec, laparams=laparams,
+                               imagewriter=imagewriter)
+    fp = file
+    interpreter = PDFPageInterpreter(rsrcmgr, device)
+    for page in PDFPage.get_pages(fp, pagenos,
+                                  maxpages=maxpages, password=password,
+                                  caching=caching, check_extractable=True):
+        page.rotate = (page.rotate+rotation) % 360
+        interpreter.process_page(page)
+    fp.close()
+    device.close()
+    outfp.seek(0)
+    result = outfp.read()
+    
+    outfp.seek(0)
+    fileToWrite = open('pdfConvertResult.txt', 'w')
+    fileToWrite.write(outfp.read())
+    fileToWrite.close()
+    outfp.close()
+    #print unicode(outfp.getvalue())
+    return result
 
 @view_config(route_name='zadanie_view', renderer='templates/zadanie.mak')
 def zadanie_view(request):
-
 
         
     zadanie = []

@@ -12,6 +12,7 @@ from .models import (
     DBSession,
     MyModel,
     )
+
 def getDataUsingPyPdf2(file):
     pdf = PdfFileReader(file)
     content = ""
@@ -21,7 +22,7 @@ def getDataUsingPyPdf2(file):
         extractedText = pdf.getPage(i).extractText()
         content +=  extractedText + "\n"
 
-    content = " ".join(content.replace("\x26", " ").strip().split())
+    content = " ".join(content.replace("\xa0", " ").strip().split())
     return content.encode("ascii", "ignore")
 
 @view_config(route_name='zadanie_view', renderer='templates/zadanie.mak')
@@ -55,8 +56,6 @@ def zadanie_view(request):
 
     zadanie.append(zadanie_members)
     return { 'zadanie': zadanie }
-
-
 
 @view_config(route_name='tasks_view', renderer='templates/tasks.mak')
 def tasks_view(request):

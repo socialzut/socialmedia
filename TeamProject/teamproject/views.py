@@ -1,13 +1,63 @@
 # -*- coding: utf-8 -*-
+from PyPDF2.pdf import PdfFileReader
+from StringIO import StringIO
+
+
+import os
+import shutil
 from pyramid.response import Response
 from pyramid.view import view_config
-
 from sqlalchemy.exc import DBAPIError
-
 from .models import (
     DBSession,
     MyModel,
     )
+def getDataUsingPyPdf2(file):
+    pdf = PdfFileReader(file)
+    content = ""
+
+    for i in range(0, pdf.getNumPages()):
+        print str(i)
+        extractedText = pdf.getPage(i).extractText()
+        content +=  extractedText + "\n"
+
+    content = " ".join(content.replace("\x26", " ").strip().split())
+    return content.encode("ascii", "ignore")
+
+@view_config(route_name='zadanie_view', renderer='templates/zadanie.mak')
+def zadanie_view(request):
+
+
+        
+    zadanie = []
+    zadanie_elements = []
+    submit = request.POST.get('submit', '0') 
+    if submit == 'submit':
+        filename = request.POST['pdf'].filename
+
+        input_file = request.POST['pdf'].file
+        zadanie_elements.append("Zaladowales plik")
+        zadanie_elements.append(filename)
+        content = getDataUsingPyPdf2(input_file)
+        zadanie_elements.append(content)
+
+
+            
+
+    else:
+        zadanie_elements.append("Nie zaladowano piku")
+    
+    zadanie_members = {
+          'contents': """""",
+          'elements': zadanie_elements,
+          'summary': """"""
+    }
+
+    zadanie.append(zadanie_members)
+    return { 'zadanie': zadanie }
+
+
+
 @view_config(route_name='tasks_view', renderer='templates/tasks.mak')
 def tasks_view(request):
     
@@ -16,7 +66,7 @@ def tasks_view(request):
     main_task_elements = []
     main_task_elements.append('Stworzenie widoku(view) gdzie będzie formularz umożliwiający\
         podanie pliku pdf z listą studentów.')
-    main_task_elements.append('Wykorzystanie jednego z dostępnych w internecie modułów\
+    main_task_elements.append('Wykorzystanie jednego z dostępnych w internecie input_filełów\
      pythonowych, który umożliwia wydobycie tekstu z pdfa.')
     main_task_elements.append("Stworzenie modułu, którego jedna z metod będzie miała\
         na wyjściu listę studentów - listę, czyli pythonową strukturę danych - '[]'")
